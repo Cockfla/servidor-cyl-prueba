@@ -27,7 +27,7 @@ const testConnection = async () => {
 // Funciones para manipular la tabla de productos
 const getProductos = async () => {
   try {
-    const result = await pool.query("SELECT * FROM PRODUCTO ORDER BY ID");
+    const result = await pool.query("SELECT * FROM PRODUCTOS ORDER BY ID");
     return result.rows;
   } catch (error) {
     console.error("Error al obtener productos:", error);
@@ -37,7 +37,7 @@ const getProductos = async () => {
 
 const getProductoById = async (id) => {
   try {
-    const result = await pool.query("SELECT * FROM PRODUCTO WHERE ID = $1", [
+    const result = await pool.query("SELECT * FROM PRODUCTOS WHERE ID = $1", [
       id,
     ]);
     return result.rows[0];
@@ -50,7 +50,7 @@ const getProductoById = async (id) => {
 const createProducto = async (nombre, camara) => {
   try {
     const result = await pool.query(
-      "INSERT INTO PRODUCTO (NOMBRE, CAMARA) VALUES ($1, $2) RETURNING *",
+      "INSERT INTO PRODUCTOS (NOMBRE, CAMARA) VALUES ($1, $2) RETURNING *",
       [nombre, camara]
     );
     return result.rows[0];
@@ -63,7 +63,7 @@ const createProducto = async (nombre, camara) => {
 const updateProductoCamara = async (id, camara) => {
   try {
     const result = await pool.query(
-      "UPDATE PRODUCTO SET CAMARA = $1 WHERE ID = $2 RETURNING *",
+      "UPDATE PRODUCTOS SET CAMARA = $1 WHERE ID = $2 RETURNING *",
       [camara, id]
     );
     return result.rows[0];
@@ -76,7 +76,7 @@ const updateProductoCamara = async (id, camara) => {
 const updateProducto = async (id, nombre, camara) => {
   try {
     const result = await pool.query(
-      "UPDATE PRODUCTO SET NOMBRE = $1, CAMARA = $2 WHERE ID = $3 RETURNING *",
+      "UPDATE PRODUCTOS SET NOMBRE = $1, CAMARA = $2 WHERE ID = $3 RETURNING *",
       [nombre, camara, id]
     );
     return result.rows[0];
@@ -89,7 +89,7 @@ const updateProducto = async (id, nombre, camara) => {
 const deleteProducto = async (id) => {
   try {
     const result = await pool.query(
-      "DELETE FROM PRODUCTO WHERE ID = $1 RETURNING *",
+      "DELETE FROM PRODUCTOS WHERE ID = $1 RETURNING *",
       [id]
     );
     return result.rows[0];
@@ -109,13 +109,13 @@ const sincronizarProductos = async (productos) => {
       if (producto.id) {
         // Si tiene ID, actualizar
         await client.query(
-          "UPDATE PRODUCTO SET NOMBRE = $1, CAMARA = $2 WHERE ID = $3",
+          "UPDATE PRODUCTOS SET NOMBRE = $1, CAMARA = $2 WHERE ID = $3",
           [producto.nombre, producto.camara, producto.id]
         );
       } else {
         // Si no tiene ID, insertar
         await client.query(
-          "INSERT INTO PRODUCTO (NOMBRE, CAMARA) VALUES ($1, $2)",
+          "INSERT INTO PRODUCTOS (NOMBRE, CAMARA) VALUES ($1, $2)",
           [producto.nombre, producto.camara]
         );
       }
